@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <nav>
+        <h4>Admin portal</h4>
+        <ul>
+            <li id="name_admin">admin</li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class = "booktable">
+        <table>
+            <th>S.No.</th>
+            <th>Title</th>
+            <th>Borrowed by </th>
+            <th>Requested by</th>
+            <th>Approve </th>
+            <th>Deny </th>
+
+            
+        <%
+        if(bookData.length!=0){
+        var i=1;
+        bookData.forEach(function(data){
+        %>
+        <tr>
+            <td><%=data.bookid %></td>
+            <td><%=data.title %></td>
+            <td><%=data.bookuser %></td>
+            <td><%=data.requestedby %></td>
+            <% if(data.bookuser=='admin' && data.requestedby) {%>
+           
+                <td> <form action="/auth/approverequest" method="POST">
+                    <input type="hidden" id="bookid" name="bookid" value=<%- data.bookid %>  >
+                    <input type="hidden" id="userid" name="userid" value=<%- data.requestedby %> >
+         
+                   <button type="hidden" class="btn btn-primary"> Approve</button>
+                   
+                   </form> 
+                   
+               </td>
+             
+                <% } else { %>
+                <td> </td>
+                <% } %>
+                <% if(data.bookuser=='admin' && data.requestedby) {%>
+           
+                    <td> <form action="/auth/denyrequest" method="POST">
+                        <input type="hidden" id="bookid" name="bookid" value=<%- data.bookid %>  >
+                        <input type="hidden" id="userid" name="userid" value=<%- data.requestedby %> >
+             
+                       <button type="hidden" class="btn btn-primary"> Deny</button>
+                       
+                       </form> 
+                       
+                   </td>
+                 
+                    <% } else { %>
+                    <td> </td>
+                    <% } %>
+    
+        </tr>
+        <%  i++; }) %>
+        <% } else{ %>
+            <tr>
+                <td colspan="7">No Data Found</td>
+            </tr>
+        <% } %>
+        </table>
+    </div>
+
+    <div class="container mt-4">
+        <div class="card" >
+             <div class="card-header">
+                    Add Book
+             </div>
+             <div class="card-body">
+                <form action="/auth/addbook" method="POST">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name= "title">
+                    </div> 
+
+                    <button type="submit" class="btn btn-primary">Add Books </button>
+                </form>
+        </div>
+    </div>
+    
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+</body>
+</html>
